@@ -248,12 +248,9 @@ def boot_selenium():
 	chrome_options.add_argument('--disable-gpu')
 	chrome_options.add_argument('--no-sandbox')
 	chrome_options.add_argument('--disable-dev-shm-usage')
-	chrome_options.add_argument('--remote-debugging-port=9222')
-
 	# chrome_options.add_argument('--remote-debugging-port=9222') #
 	# chrome_options.add_experimental_option("debuggerAddress","127.0.0.1:9222")
 	driver=webdriver.Chrome(options=chrome_options)
-	# driver.maximize_window()
 	return driver
 # 検索条件と比較して全てOKなら items_detail_dict に検索条件名を付加して返す
 def get_filter_judge(db_all_data_dict,items_detail_dict,self):
@@ -454,7 +451,7 @@ def main_process_selenium_test(self):
 		# items_detail_dict=get_detail_kitamura_selenium_test(driver,self)
 		# self.stdout.write(str(f'最新の商品詳細：{items_detail_dict[0]}'))
 
-		selenium_sazanka(driver,self)
+		get_detail_kitamura_selenium_test(driver,self)
 	finally:
 		self.stdout.write(str(f'終了したので driver.quit()'))
 		driver.quit()
