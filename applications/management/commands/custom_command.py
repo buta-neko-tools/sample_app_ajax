@@ -470,8 +470,8 @@ def netmall_selenium_test(driver):
 def get_detail_kitamura_selenium_test(driver,self):
 	items_detail_dict=[]
 	add_url='https://shop.kitamura.jp'
-	# src_url="https://shop.kitamura.jp/ec/list?type=u&sort=update_date&limit=20"
-	src_url="https://shop.kitamura.jp/ec/list?keyword=aaa&narrow18=0"
+	src_url="https://shop.kitamura.jp/ec/list?type=u&sort=update_date&limit=20"
+	# src_url="https://shop.kitamura.jp/ec/list?keyword=aaa&narrow18=0"
 	driver.get(src_url)
 	bs4obj=bs4.BeautifulSoup(driver.page_source,'html.parser')
 	self.stdout.write(str(f'bs4obj：{bs4obj.text}'))
