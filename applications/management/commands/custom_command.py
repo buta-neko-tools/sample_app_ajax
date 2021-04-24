@@ -470,12 +470,13 @@ def netmall_selenium_test(driver):
 def get_detail_kitamura_selenium_test(driver,self):
 	items_detail_dict=[]
 	add_url='https://shop.kitamura.jp'
-	src_url="https://shop.kitamura.jp/ec/list?type=u&sort=update_date&limit=20"
+	# src_url="https://shop.kitamura.jp/ec/list?type=u&sort=update_date&limit=20"
+	src_url="https://shop.kitamura.jp/ec/list?keyword=aaa&narrow18=0"
 	driver.get(src_url)
 	bs4obj=bs4.BeautifulSoup(driver.page_source,'html.parser')
 	self.stdout.write(str(f'bs4obj：{bs4obj.text}'))
+	"""
 	items_list=bs4obj.select('div[class="product-area"]')
-	# print(items_list)
 	for items in items_list:
 		# 商品URL
 		items_url=add_url+items.select_one('a[class="product-link"]').get('href')
@@ -493,7 +494,7 @@ def get_detail_kitamura_selenium_test(driver,self):
 															'商品説明文':items_desc,
 															'商品URL':items_url,
 															})
-	# pprint.pprint(items_detail_dict)
+	"""
 	return items_detail_dict
 #
 def selenium_sazanka(driver,self):
