@@ -228,7 +228,9 @@ def boot_selenium():
 	# アダプタエラー、自動テスト…、を非表示
 	# chrome_options.add_experimental_option("excludeSwitches",['enable-automation',
 	# 																													'enable-logging'])
-	# chrome_options.add_argument('--headless')  #ヘッドレスモード
+	chrome_options.add_experimental_option("excludeSwitches",['enable-automation'])
+	chrome_options.add_experimental_option('useAutomationExtension',False)
+	chrome_options.add_argument('--headless')  #ヘッドレスモード
 	# chrome_options.add_argument('--incognito')  #シークレットモード
 	# chrome_options.add_argument('--disable-gpu')
 	# chrome_options.add_argument('--disable-desktop-notifications')
@@ -441,6 +443,7 @@ def main_process_netmall_only(self):
 def main_process_selenium_test(self):
 	# selenium を起動
 	driver=boot_selenium()
+	self.stdout.write(str(f'driver：{driver}'))
 	self.stdout.write(str(f'selenium 起動完了'))
 	# エラーで終了しても driver.quit() 出来るように追加
 	try:
@@ -453,7 +456,7 @@ def main_process_selenium_test(self):
 		get_detail_kitamura_selenium_test(driver,self)
 	finally:
 		self.stdout.write(str(f'終了したので driver.quit()'))
-		# driver.quit()
+		driver.quit()
 #
 def netmall_selenium_test(driver):
 	items_url_list=[]
@@ -470,6 +473,7 @@ def get_detail_kitamura_selenium_test(driver,self):
 	items_detail_dict=[]
 	add_url='https://shop.kitamura.jp'
 	src_url="https://shop.kitamura.jp/ec/list?type=u&sort=update_date&limit=20"
+	# src_url='https://apps.apple.com/us/app/tiktok-make-your-day/id835599320#see-all/reviews'
 	# src_url="https://shop.kitamura.jp/ec/list?keyword=aaa&narrow18=0"
 	driver.get(src_url)
 	bs4obj=bs4.BeautifulSoup(driver.page_source,'html.parser')
@@ -523,7 +527,3 @@ class Command(BaseCommand):
 		# db_all_data_dict=get_db_all_data()
 		# get_filter_judge(db_all_data_dict,items_detail_dict,self)
 		# # self.stdout.write(str(f'{}\n\n'))
-
-		# user_data=UserDataModel.objects.get(md_name='user data')
-		# line_token=user_data.md_line_token
-		# self.stdout.write(str(f'DBから取得したLINEトークン：{line_token}'))
