@@ -225,29 +225,28 @@ def get_db_all_data():
 # selenium設定
 def boot_selenium():
 	chrome_options=webdriver.ChromeOptions()
-	"""
 	# アダプタエラー、自動テスト…、を非表示
-	chrome_options.add_experimental_option("excludeSwitches",['enable-automation',
-																														'enable-logging'])
-	chrome_options.add_argument('--headless')  #ヘッドレスモード
-	chrome_options.add_argument('--incognito')  #シークレットモード
-	chrome_options.add_argument('--disable-gpu')
-	chrome_options.add_argument('--disable-desktop-notifications')
-	chrome_options.add_argument("--disable-extensions")
-	chrome_options.add_argument('--disable-dev-shm-usage') #/dev/shmを使わないように指定
-	chrome_options.add_argument('--disable-application-cache')
-	chrome_options.add_argument('--no-sandbox')
-	chrome_options.add_argument('--single-process')
-	chrome_options.add_argument('--ignore-certificate-errors')
-	chrome_options.add_argument('--user-agent=aheahe')
-	chrome_options.add_argument('--blink-settings=imagesEnabled=false') #画像を非表示
-	chrome_options.page_load_strategy='none' #
-	"""
-
-	chrome_options.add_argument('--headless')
-	chrome_options.add_argument('--disable-gpu')
-	chrome_options.add_argument('--no-sandbox')
-	chrome_options.add_argument('--disable-dev-shm-usage')
+	# chrome_options.add_experimental_option("excludeSwitches",['enable-automation',
+	# 																													'enable-logging'])
+	# chrome_options.add_argument('--headless')  #ヘッドレスモード
+	# chrome_options.add_argument('--incognito')  #シークレットモード
+	# chrome_options.add_argument('--disable-gpu')
+	# chrome_options.add_argument('--disable-desktop-notifications')
+	# chrome_options.add_argument("--disable-extensions")
+	# chrome_options.add_argument('--disable-dev-shm-usage') #/dev/shmを使わないように指定
+	# chrome_options.add_argument('--disable-application-cache')
+	# chrome_options.add_argument('--no-sandbox')
+	# chrome_options.add_argument('--single-process')
+	# chrome_options.add_argument('--ignore-certificate-errors')
+	# chrome_options.add_argument('--user-agent=aheahe')
+	# chrome_options.add_argument('--blink-settings=imagesEnabled=false') #画像を非表示
+	# chrome_options.page_load_strategy='none' #
+	# """
+	# chrome_options.add_argument('--headless')
+	# chrome_options.add_argument('--disable-gpu')
+	# chrome_options.add_argument('--no-sandbox')
+	# chrome_options.add_argument('--disable-dev-shm-usage')
+	# """
 	# chrome_options.add_argument('--remote-debugging-port=9222') #
 	# chrome_options.add_experimental_option("debuggerAddress","127.0.0.1:9222")
 	driver=webdriver.Chrome(options=chrome_options)
@@ -454,7 +453,7 @@ def main_process_selenium_test(self):
 		get_detail_kitamura_selenium_test(driver,self)
 	finally:
 		self.stdout.write(str(f'終了したので driver.quit()'))
-		driver.quit()
+		# driver.quit()
 #
 def netmall_selenium_test(driver):
 	items_url_list=[]
@@ -512,14 +511,6 @@ def selenium_sazanka(driver,self):
 class Command(BaseCommand):
 	help = 'crawler for test.'
 	def handle(self, *args, **options):
-		'''SearchQueryModel.objects.create(id=1,md_query_name=datetime.datetime.now())
-		while True:
-			tmp_db=SearchQueryModel.objects.get(id=1)
-			dt_now=datetime.now()
-			tmp_db.md_query_name=dt_now
-			self.stdout.write(str(dt_now))
-			tmp_db.save()
-			time.sleep(1)'''
 
 		# main_process(self)
 		# main_process_v2(self)
@@ -532,3 +523,7 @@ class Command(BaseCommand):
 		# db_all_data_dict=get_db_all_data()
 		# get_filter_judge(db_all_data_dict,items_detail_dict,self)
 		# # self.stdout.write(str(f'{}\n\n'))
+
+		# user_data=UserDataModel.objects.get(md_name='user data')
+		# line_token=user_data.md_line_token
+		# self.stdout.write(str(f'DBから取得したLINEトークン：{line_token}'))
