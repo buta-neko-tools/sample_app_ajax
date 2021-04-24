@@ -225,32 +225,39 @@ def get_db_all_data():
 # selenium設定
 def boot_selenium():
 	chrome_options=webdriver.ChromeOptions()
-	# アダプタエラー、自動テスト…、を非表示
-	# chrome_options.add_experimental_option("excludeSwitches",['enable-automation',
-	# 																													'enable-logging'])
+	user_agent='Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_3) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/80.0.3987.132 Safari/537.36'
 	chrome_options.add_experimental_option("excludeSwitches",['enable-automation'])
 	chrome_options.add_experimental_option('useAutomationExtension',False)
+	chrome_options.add_argument(f'user-agent={user_agent}')
 	chrome_options.add_argument('--headless')  #ヘッドレスモード
-	# chrome_options.add_argument('--incognito')  #シークレットモード
-	# chrome_options.add_argument('--disable-gpu')
-	# chrome_options.add_argument('--disable-desktop-notifications')
-	# chrome_options.add_argument("--disable-extensions")
-	# chrome_options.add_argument('--disable-dev-shm-usage') #/dev/shmを使わないように指定
-	# chrome_options.add_argument('--disable-application-cache')
-	# chrome_options.add_argument('--no-sandbox')
-	# chrome_options.add_argument('--single-process')
-	# chrome_options.add_argument('--ignore-certificate-errors')
-	# chrome_options.add_argument('--user-agent=aheahe')
-	# chrome_options.add_argument('--blink-settings=imagesEnabled=false') #画像を非表示
-	# chrome_options.page_load_strategy='none' #
-	# """
-	# chrome_options.add_argument('--headless')
-	# chrome_options.add_argument('--disable-gpu')
-	# chrome_options.add_argument('--no-sandbox')
-	# chrome_options.add_argument('--disable-dev-shm-usage')
-	# """
-	# chrome_options.add_argument('--remote-debugging-port=9222') #
-	# chrome_options.add_experimental_option("debuggerAddress","127.0.0.1:9222")
+	"""
+	# アダプタエラー、自動テスト…、を非表示
+	chrome_options.add_experimental_option("excludeSwitches",['enable-automation',
+																														'enable-logging'])
+	chrome_options.add_argument('--headless')  #ヘッドレスモード
+	chrome_options.add_argument('--incognito')  #シークレットモード
+	chrome_options.add_argument('--disable-gpu')
+	chrome_options.add_argument('--disable-desktop-notifications')
+	chrome_options.add_argument("--disable-extensions")
+	chrome_options.add_argument('--disable-dev-shm-usage') #/dev/shmを使わないように指定
+	chrome_options.add_argument('--disable-application-cache')
+	chrome_options.add_argument('--no-sandbox')
+	chrome_options.add_argument('--single-process')
+	chrome_options.add_argument('--ignore-certificate-errors')
+	chrome_options.add_argument('--user-agent=aheahe')
+	chrome_options.add_argument('--blink-settings=imagesEnabled=false') #画像を非表示
+	chrome_options.page_load_strategy='none' #
+	"""
+	"""
+	chrome_options.add_argument('--headless')
+	chrome_options.add_argument('--disable-gpu')
+	chrome_options.add_argument('--no-sandbox')
+	chrome_options.add_argument('--disable-dev-shm-usage')
+	"""
+	"""
+	chrome_options.add_argument('--remote-debugging-port=9222') #
+	chrome_options.add_experimental_option("debuggerAddress","127.0.0.1:9222")
+	"""
 	driver=webdriver.Chrome(options=chrome_options)
 	return driver
 # 検索条件と比較して全てOKなら items_detail_dict に検索条件名を付加して返す
