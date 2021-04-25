@@ -68,3 +68,26 @@ def userdata(request):
 		return render(request, 'registration/userdata.html',dt_data)
 	else:
 		return HttpResponseRedirect('/accounts/login/')
+
+def dballdata(request):
+	if request.user.is_authenticated:
+		db_all_data_dict=[]
+		for sqm_obj in SearchQueryModel.objects.all():
+			if sqm_obj.md_alert_sw=='checked':
+				db_all_data_dict.append({'検索条件名':sqm_obj.md_query_name,
+																 'ORタイトル':sqm_obj.md_or_title,
+																 '除外タイトル':sqm_obj.md_ex_title,
+																 'OR商品説明文':sqm_obj.md_or_desc,
+																 '除外商品説明文':sqm_obj.md_ex_desc,
+																 '最低価格':sqm_obj.md_price_min,
+																 '最高価格':sqm_obj.md_price_max})
+		try:
+			user_data=UserDataModel.objects.get(md_name='user data')
+			line_token=user_data.md_line_token
+		except:
+			line_token=''
+		dt_data={'db_all_data_dict':db_all_data_dict,
+						 'line_token':line_token}
+		return render(request, 'applications/dballdata.html',dt_data)
+	else:
+		return HttpResponseRedirect('/accounts/login/')

@@ -242,6 +242,7 @@ def boot_selenium():
 	chrome_options.add_argument('--headless')  #ヘッドレスモード
 	chrome_options.add_argument('--incognito')  #シークレットモード
 	chrome_options.add_argument('--no-sandbox')
+	chrome_options.add_argument('--single-process')
 	chrome_options.add_argument('--disable-gpu')
 	chrome_options.add_argument('--disable-dev-shm-usage')
 	# これを追加するとキタムラから何も取得できなくなる
