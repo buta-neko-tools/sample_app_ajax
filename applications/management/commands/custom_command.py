@@ -470,7 +470,8 @@ def main_process_selenium_test(self):
 		# items_detail_dict=get_detail_kitamura_selenium_test(driver,self)
 		# self.stdout.write(str(f'最新の商品詳細：{items_detail_dict[0]}'))
 
-		get_detail_kitamura_selenium_test(driver,self)
+		a=get_detail_kitamura_selenium_test(driver,self)
+		self.stdout.write(str(f'{a}'))
 	finally:
 		self.stdout.write(str(f'終了したので driver.quit()'))
 		driver.quit()
@@ -494,8 +495,7 @@ def get_detail_kitamura_selenium_test(driver,self):
 	# src_url="http://ifconfig.me/all.json"
 	driver.get(src_url)
 	bs4obj=bs4.BeautifulSoup(driver.page_source,'html.parser')
-	self.stdout.write(str(f'bs4obj：{bs4obj.text}'))
-	"""
+	# self.stdout.write(str(f'bs4obj：{bs4obj.text}'))
 	items_list=bs4obj.select('div[class="product-area"]')
 	for items in items_list:
 		# 商品URL
@@ -514,6 +514,7 @@ def get_detail_kitamura_selenium_test(driver,self):
 															'商品説明文':items_desc,
 															'商品URL':items_url,
 															})
+	"""
 	"""
 	return items_detail_dict
 #
