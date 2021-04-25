@@ -227,8 +227,8 @@ def boot_selenium():
 	chrome_options=webdriver.ChromeOptions()
 	# user_agent='Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_3) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/80.0.3987.132 Safari/537.36'
 	user_agent='Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/87.0.4280.88 Safari/537.36'
-	# chrome_options.add_experimental_option("excludeSwitches",['enable-automation'])
-	# chrome_options.add_experimental_option('useAutomationExtension',False)
+	chrome_options.add_experimental_option("excludeSwitches",['enable-automation'])
+	chrome_options.add_experimental_option('useAutomationExtension',False)
 	chrome_options.add_argument(f'user-agent={user_agent}')
 	chrome_options.add_argument('--headless')  #ヘッドレスモード
 	chrome_options.add_argument('--disable-gpu')
