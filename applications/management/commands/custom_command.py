@@ -178,22 +178,23 @@ def send_line_notify(token,message,image):
 					'imageThumbnail':image}
 	requests.post(line_notify_api, headers=headers, data=data)
 # 辞書の内容を整形して通知
-def send_alert_content(alert_content_dict,line_notify_token):
+def send_alert_content(alert_content_dict,line_token):
 	pipe='------------------------------'
-	send_line_notify(line_notify_token,pipe,'')
+	send_line_notify(line_token,pipe,'')
 	for alert_content in alert_content_dict:
 		messege=f"\n検索条件名：{alert_content['検索条件名']}\n" \
 						f"タイトル：{alert_content['タイトル']}\n" \
 						f"価格：{alert_content['価格']}\n" \
 						f"商品URL：{alert_content['商品URL']}"
 		# f"商品説明文：{alert_content['商品説明文']}\n"
-		send_line_notify(line_notify_token,messege,alert_content['画像URL'])
-	send_line_notify(line_notify_token,pipe,'')
+		send_line_notify(line_token,messege,alert_content['画像URL'])
+	send_line_notify(line_token,pipe,'')
 # LINE notify で送信する前処理
-def final_process(update_url_list,self,site_type,line_notify_token):
+def final_process(update_url_list,self,site_type):
 	# self.stdout.write(str(f'更新されたURL len({len(update_url_list)})\n{update_url_list}\n\n'))
 	db_all_data_dict=get_db_all_data()
-	if db_all_data_dict:
+	line_token=get_db_line_token()
+	if db_all_data_dict and line_token:
 		if site_type=='kitamura':
 			items_detail_dict=update_url_list
 		elif site_type=='netmall':
@@ -201,9 +202,9 @@ def final_process(update_url_list,self,site_type,line_notify_token):
 		alert_content_dict=get_filter_judge(db_all_data_dict,items_detail_dict,self)
 		self.stdout.write(str(f'通知する内容\n{alert_content_dict}\n\n'))
 		if alert_content_dict:
-			send_alert_content(alert_content_dict,line_notify_token)
+			send_alert_content(alert_content_dict,line_token)
 	else:
-		self.stdout.write(str(f'通知が全てOFFだったので通知しなかった\n\n'))
+		self.stdout.write(str(f'通知が全てOFFかLINEトークンが未入力だったので通知しなかった。\n\n'))
 
 # ------------------------------
 # その他
@@ -222,42 +223,59 @@ def get_db_all_data():
 											'最高価格':sqm_obj.md_price_max,
 											})
 	return db_all_data_dict
+# DBのLINEトークンを取得
+def get_db_line_token():
+	try:
+		user_data=UserDataModel.objects.get(md_name='user data')
+		line_token=user_data.md_line_token
+	except:
+		line_token=''
+	return line_token
 # selenium設定
 def boot_selenium():
 	chrome_options=webdriver.ChromeOptions()
-	# user_agent='Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_3) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/80.0.3987.132 Safari/537.36'
 	user_agent='Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/87.0.4280.88 Safari/537.36'
 	chrome_options.add_argument(f'user-agent={user_agent}')
-	chrome_options.add_experimental_option("excludeSwitches",['enable-automation'])
+	chrome_options.add_experimental_option("excludeSwitches",['enable-automation',
+																														'enable-logging'])
 	chrome_options.add_experimental_option('useAutomationExtension',False)
-	# chrome_options.add_argument('--headless')  #ヘッドレスモード
-	chrome_options.add_argument('--disable-gpu')
+	chrome_options.add_argument('--headless')  #ヘッドレスモード
+	chrome_options.add_argument('--incognito')  #シークレットモード
 	chrome_options.add_argument('--no-sandbox')
+	chrome_options.add_argument('--disable-gpu')
 	chrome_options.add_argument('--disable-dev-shm-usage')
+	# これを追加するとキタムラから何も取得できなくなる
+	# chrome_options.add_argument('--disable-application-cache')
+	chrome_options.add_argument('--disable-desktop-notifications')
+	chrome_options.add_argument("--disable-extensions")
+	chrome_options.add_argument('--ignore-certificate-errors')
+	chrome_options.add_argument('--ignore-ssl-errors')
+	chrome_options.add_argument('--blink-settings=imagesEnabled=false') #画像を非表示
+	chrome_options.page_load_strategy='none' #
+	# ↓を参考にしてプロキシを設定したらHerokuでも内容取得できた
+	# https://teratail.com/questions/205583
+	# http://proxy.moo.jp/ja/?c=jp&f=1&s=r
 	proxy_host='43.225.109.51'
 	proxy_port='3128'
 	chrome_options.add_argument(f"--proxy-server=http://{proxy_host}:{proxy_port}")
-	# chrome_options.add_argument('--ignore-certificate-errors')
-	# chrome_options.add_argument('--ignore-ssl-errors')
-	# chrome_options.add_experimental_option("prefs",{"profile.managed_default_content_settings.javascript":2})
-	# """
-	# # アダプタエラー、自動テスト…、を非表示
-	# chrome_options.add_experimental_option("excludeSwitches",['enable-automation',
-	# 																													'enable-logging'])
-	# chrome_options.add_argument('--headless')  #ヘッドレスモード
-	# chrome_options.add_argument('--incognito')  #シークレットモード
-	# chrome_options.add_argument('--disable-gpu')
-	# chrome_options.add_argument('--disable-desktop-notifications')
-	# chrome_options.add_argument("--disable-extensions")
-	# chrome_options.add_argument('--disable-dev-shm-usage') #/dev/shmを使わないように指定
-	# chrome_options.add_argument('--disable-application-cache')
-	# chrome_options.add_argument('--no-sandbox')
-	# chrome_options.add_argument('--single-process')
-	# chrome_options.add_argument('--ignore-certificate-errors')
-	# chrome_options.add_argument('--user-agent=aheahe')
-	# chrome_options.add_argument('--blink-settings=imagesEnabled=false') #画像を非表示
-	# chrome_options.page_load_strategy='none' #
-	# """
+	"""
+	# アダプタエラー、自動テスト…、を非表示
+	chrome_options.add_experimental_option("excludeSwitches",['enable-automation',
+																														'enable-logging'])
+	chrome_options.add_argument('--headless')  #ヘッドレスモード
+	chrome_options.add_argument('--incognito')  #シークレットモード
+	chrome_options.add_argument('--disable-gpu')
+	chrome_options.add_argument('--disable-desktop-notifications')
+	chrome_options.add_argument("--disable-extensions")
+	chrome_options.add_argument('--disable-dev-shm-usage') #/dev/shmを使わないように指定
+	chrome_options.add_argument('--disable-application-cache')
+	chrome_options.add_argument('--no-sandbox')
+	chrome_options.add_argument('--single-process')
+	chrome_options.add_argument('--ignore-certificate-errors')
+	chrome_options.add_argument('--user-agent=aheahe')
+	chrome_options.add_argument('--blink-settings=imagesEnabled=false') #画像を非表示
+	chrome_options.page_load_strategy='none' #
+	"""
 	"""
 	chrome_options.add_argument('--headless')
 	chrome_options.add_argument('--disable-gpu')
@@ -523,7 +541,6 @@ def selenium_sazanka(driver,self):
 	driver.get(url)
 	bs4obj=bs4.BeautifulSoup(driver.page_source,'html.parser')
 	self.stdout.write(str(f'bs4obj：{bs4obj.text}'))
-	# return items_detail_dict
 
 
 
@@ -535,9 +552,9 @@ class Command(BaseCommand):
 	def handle(self, *args, **options):
 
 		# main_process(self)
-		# main_process_v2(self)
+		main_process_v2(self)
 		# main_process_netmall_only(self)
-		main_process_selenium_test(self)
+		# main_process_selenium_test(self)
 
 		# update_url_list=['https://www.net-chuko.com/buy/detail.do?ac=2142330109249',
 		# 								 'https://www.net-chuko.com/buy/detail.do?ac=2145260095408']
