@@ -1,9 +1,6 @@
-import pprint
 import re
 import sys
-import time
 # import winsound
-from datetime import datetime
 from selenium import webdriver
 from applications.models import SearchQueryModel,UserDataModel
 from django.core.management.base import BaseCommand, CommandError
