@@ -73,6 +73,8 @@ def get_detail_kitamura_selenium(driver):
 																'商品説明文':items_desc,
 																'商品URL':items_url,
 																})
+		if not items_detail_dict:
+			print('items_detail_dict が空なので再取得')
 		# print(f'items_detail_dict の要素数：{len(items_detail_dict)}')
 	# print(items_detail_dict)
 	return items_detail_dict
@@ -188,10 +190,10 @@ def boot_selenium():
 	chrome_options.add_experimental_option("excludeSwitches",['enable-automation',
 																														'enable-logging'])
 	chrome_options.add_experimental_option('useAutomationExtension',False)
-	# chrome_options.add_argument('--headless')  #ヘッドレスモード
-	chrome_options.add_argument('--incognito')  #シークレットモード
+	chrome_options.add_argument('--headless')  #ヘッドレスモード
+	# chrome_options.add_argument('--incognito')  #シークレットモード
 	chrome_options.add_argument('--no-sandbox')
-	chrome_options.add_argument('--single-process')
+	# chrome_options.add_argument('--single-process')
 	chrome_options.add_argument('--disable-gpu')
 	chrome_options.add_argument('--disable-dev-shm-usage')
 	# これを追加するとキタムラから何も取得できなくなる
@@ -201,13 +203,13 @@ def boot_selenium():
 	chrome_options.add_argument('--ignore-certificate-errors')
 	chrome_options.add_argument('--ignore-ssl-errors')
 	chrome_options.add_argument('--blink-settings=imagesEnabled=false') #画像を非表示
-	chrome_options.page_load_strategy='none' #
+	# chrome_options.page_load_strategy='none' #
 	# ↓を参考にしてプロキシを設定したらHerokuでも内容取得できた
 	# https://teratail.com/questions/205583
 	# http://proxy.moo.jp/ja/?c=jp&f=1&s=r
-	# proxy_host='43.129.20.96'
-	# proxy_port='80'
-	# chrome_options.add_argument(f"--proxy-server=http://{proxy_host}:{proxy_port}")
+	proxy_host='203.74.120.79'
+	proxy_port='3128'
+	chrome_options.add_argument(f"--proxy-server=http://{proxy_host}:{proxy_port}")
 	driver=webdriver.Chrome(options=chrome_options)
 	return driver
 # 検索条件と比較して全てOKなら items_detail_dict に検索条件名を付加して返す
@@ -288,16 +290,16 @@ def main_process_v2():
 		# kitamura
 		while_count_kitamura=0
 		old_detail_dict_kitamura=get_detail_kitamura_selenium(driver)
-		print(f'old_detail_dict_kitamura の要素数：{len(old_detail_dict_kitamura)}')
+		# print(f'old_detail_dict_kitamura の要素数：{len(old_detail_dict_kitamura)}')
 		# netmall
 		while_count_netmall=0
 		old_url_list_netmall=get_url_list_netmall()
-		print(f'old_url_list_netmall の要素数：{len(old_url_list_netmall)}')
+		# print(f'old_url_list_netmall の要素数：{len(old_url_list_netmall)}')
 		while True:
 			# kitamura
 			while_count_kitamura+=1
 			new_detail_dict_kitamura=get_detail_kitamura_selenium(driver)
-			print(f'new_detail_dict_kitamura の要素数：{len(new_detail_dict_kitamura)}')
+			# print(f'new_detail_dict_kitamura の要素数：{len(new_detail_dict_kitamura)}')
 			update_detail_dict_kitamura=compare_detail_dict_kitamura(old_detail_dict_kitamura,new_detail_dict_kitamura)
 			if update_detail_dict_kitamura:
 				# winsound.Beep(1500,500)
@@ -314,7 +316,7 @@ def main_process_v2():
 			# netmall
 			while_count_netmall+=1
 			new_url_list_netmall=get_url_list_netmall()
-			print(f'new_url_list_netmall の要素数：{len(new_url_list_netmall)}')
+			# print(f'new_url_list_netmall の要素数：{len(new_url_list_netmall)}')
 			update_url_list_netmall=list(set(new_url_list_netmall[:45])-set(old_url_list_netmall))
 			if update_url_list_netmall:
 				# winsound.Beep(1500,500)
