@@ -10,17 +10,7 @@
 				{% csrf_token %}
 				<!-- 通知のONOFF -->
 				<div class="alert_sw_first">
-					<span class="d-flex align-items-center">
-						<span>通知の ON・OFF</span>
-						<button type="button" class="btn btn-dark rounded-circle p-0 d-flex align-items-center  justify-content-center"
-								style="width:1.3rem;height:1.3rem;position:relative;left:3px;"
-								data-trigger="focus"
-								data-placement="right"
-								data-toggle="popover"
-								data-html="true"
-								data-content="URLには解析を行うために必要となる、表示件数(&n=)、ページ番号(&b=)、表示方法は「タイトルと画像」(&mode=2)、が含まれるようにお願い致します。<br>終了する曜日と時間帯についてはWebアプリにて指定可能なためURLには含めないようにお願い致します。">？
-						</button>
-					</span>
+					{% include "base/popover_v1.html" with title="登録時の通知状態" description="検索条件登録直後に通知を行いたくない場合はOFFにして下さい。<br>" only %}
 					<label>
 						{% if read_db.md_alert_sw == "nocheck" %}
 							<input type="checkbox" nocheck name="alert_sw_first" data-on="ON" data-off="OFF" data-toggle="toggle" data-onstyle="primary" data-offstyle="secondary">
@@ -31,80 +21,30 @@
 				</div>
 				<!-- OR タイトル -->
 				<p>
-					<span class="d-flex align-items-center">
-						<span>OR タイトル</span>
-						<button type="button" class="btn btn-dark rounded-circle p-0 d-flex align-items-center  justify-content-center"
-								style="width:1.3rem;height:1.3rem;position:relative;left:3px;"
-								data-trigger="focus"
-								data-placement="right"
-								data-toggle="popover"
-								data-html="true"
-								data-content="URLには解析を行うために必要となる、表示件数(&n=)、ページ番号(&b=)、表示方法は「タイトルと画像」(&mode=2)、が含まれるようにお願い致します。<br>終了する曜日と時間帯についてはWebアプリにて指定可能なためURLには含めないようにお願い致します。">？
-						</button>
-					</span>
+					{% include "base/popover_v1.html" with title="タイトルのOR検索" description="キーワードはスペース区切りで入力してください。<br>何も入力しない場合は全てのタイトルが含まれます。<br>" only %}
 					<textarea name="or_title" class="textarea-width100" rows="2">{{ read_db.md_or_title }}</textarea>
 				</p>
 				<!-- 除外 タイトル -->
 				<p>
-					<span class="d-flex align-items-center">
-						<span>除外 タイトル</span>
-						<button type="button" class="btn btn-dark rounded-circle p-0 d-flex align-items-center  justify-content-center"
-								style="width:1.3rem;height:1.3rem;position:relative;left:3px;"
-								data-trigger="focus"
-								data-placement="right"
-								data-toggle="popover"
-								data-html="true"
-								data-content="URLには解析を行うために必要となる、表示件数(&n=)、ページ番号(&b=)、表示方法は「タイトルと画像」(&mode=2)、が含まれるようにお願い致します。<br>終了する曜日と時間帯についてはWebアプリにて指定可能なためURLには含めないようにお願い致します。">？
-						</button>
-					</span>
+					{% include "base/popover_v1.html" with title="タイトルのマイナス検索" description="キーワードはスペース区切りで入力してください。<br>何も入力しない場合は全てのタイトルが含まれます。<br>" only %}
 					<textarea name="ex_title" class="textarea-width100" rows="2">{{ read_db.md_ex_title }}</textarea>
 				</p>
 				<!-- OR 商品説明文 -->
 				<p>
-					<span class="d-flex align-items-center">
-						<span>OR 商品説明文</span>
-						<button type="button" class="btn btn-dark rounded-circle p-0 d-flex align-items-center  justify-content-center"
-								style="width:1.3rem;height:1.3rem;position:relative;left:3px;"
-								data-trigger="focus"
-								data-placement="right"
-								data-toggle="popover"
-								data-html="true"
-								data-content="URLには解析を行うために必要となる、表示件数(&n=)、ページ番号(&b=)、表示方法は「タイトルと画像」(&mode=2)、が含まれるようにお願い致します。<br>終了する曜日と時間帯についてはWebアプリにて指定可能なためURLには含めないようにお願い致します。">？
-						</button>
-					</span>
+					{% include "base/popover_v1.html" with title="商品説明文のOR検索" description="キーワードはスペース区切りで入力してください。<br>何も入力しない場合は全ての商品説明文が含まれます。<br>" only %}
 					<textarea name="or_desc" class="textarea-width100" rows="2">{{ read_db.md_or_desc }}</textarea>
 				</p>
 				<!-- 除外 商品説明文 -->
 				<p>
-					<span class="d-flex align-items-center">
-						<span>除外 商品説明文</span>
-						<button type="button" class="btn btn-dark rounded-circle p-0 d-flex align-items-center  justify-content-center"
-								style="width:1.3rem;height:1.3rem;position:relative;left:3px;"
-								data-trigger="focus"
-								data-placement="right"
-								data-toggle="popover"
-								data-html="true"
-								data-content="URLには解析を行うために必要となる、表示件数(&n=)、ページ番号(&b=)、表示方法は「タイトルと画像」(&mode=2)、が含まれるようにお願い致します。<br>終了する曜日と時間帯についてはWebアプリにて指定可能なためURLには含めないようにお願い致します。">？
-						</button>
-					</span>
+					{% include "base/popover_v1.html" with title="商品説明文のマイナス検索" description="キーワードはスペース区切りで入力してください。<br>何も入力しない場合は全ての商品説明文が含まれます。<br>" only %}
 					<textarea name="ex_desc" class="textarea-width100" rows="2">{{ read_db.md_ex_desc }}</textarea>
 				</p>
 				<!-- 価格フィルタ -->
 				<p>
-					<span class="d-flex align-items-center">
-						<span>価格フィルタ</span>
-						<button type="button" class="btn btn-dark rounded-circle p-0 d-flex align-items-center  justify-content-center"
-										style="width:1.3rem;height:1.3rem;position:relative;left:3px;"
-										data-trigger="focus"
-										data-placement="right"
-										data-toggle="popover"
-										data-html="true"
-										data-content="OFFにした状態であれば、テキストボックスに数値が入力された状態でも絞り込みは行われません。<br>数値以外は入力不可で上下キーで0.1毎に増減可能です。<br>ストアURLで解析を行う場合は無効となります。">？
-						</button>
-					</span>
-						<input type="number" name="price_min" value={{ read_db.md_price_min }} min="0" max="" step="1">
-						<span>～</span>
-						<input type="number" name="price_max" value={{ read_db.md_price_max }} min="0" max="" step="1">
+					{% include "base/popover_v1.html" with title="価格帯の絞り" description="何も入力しない場合は全ての価格帯が含まれます。<br>" only %}
+					<input type="number" name="price_min" value={{ read_db.md_price_min }} min="0" max="" step="1">
+					<span>～</span>
+					<input type="number" name="price_max" value={{ read_db.md_price_max }} min="0" max="" step="1">
 				</p>
 				<!-- DB連携 -->
 				<span class="d-flex align-items-center">
@@ -138,6 +78,7 @@
 					-->
 				</p>
 				<!-- 通知のONOFFの変更 -->
+				{% include "base/popover_v1.html" with title="通知状態の変更" description="保存された検索条件名と通知状態の一覧が表示されます。<br>通知状態を変更して「save」ボタンをクリックすると、通知状態をまとめて変更可能です。<br>" only %}
 				{% for item in exists_db %}
 					<div class="alert_sw_all">
 						<label>

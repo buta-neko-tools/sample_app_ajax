@@ -336,9 +336,6 @@ def main_process_v2():
 
 
 
-
-
-
 # main_process(self)
 main_process_v2()
 # main_process_netmall_only(self)

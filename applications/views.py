@@ -60,11 +60,17 @@ def input_v1(request):
 
 def userdata(request):
 	if request.user.is_authenticated:
-		exists_db=UserDataModel.objects.all()
+		try:
+			userdata=UserDataModel.objects.get(md_name='user data')
+			db_line_token=userdata.md_line_token
+		except:
+			db_line_token=''
 		if request.method=='POST':
 			UserDataModel.objects.update_or_create(md_name='user data',
 																						 defaults={'md_line_token':request.POST['line_token']})
-		dt_data={'exists_db':exists_db}
+			userdata=UserDataModel.objects.get(md_name='user data')
+			db_line_token=userdata.md_line_token
+		dt_data={'db_line_token':db_line_token}
 		return render(request, 'registration/userdata.html',dt_data)
 	else:
 		return HttpResponseRedirect('/accounts/login/')
