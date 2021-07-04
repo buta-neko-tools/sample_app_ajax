@@ -6,9 +6,8 @@
 <body>
 	<form method="post" action="">
 		{% csrf_token %}
-
-		<!-- 登録時の通知スイッチ -->
-		<div>
+		<!-- 通知の ON OFF -->
+		<div class="alert_sw_first">
 			{% include "base/popover_v1.html" with title="登録時の通知状態" description="検索条件登録直後に通知を行いたくない場合はOFFにして下さい。" only %}
 			<label>
 				{% if read_db.md_alert_sw == "nocheck" %}
@@ -18,49 +17,33 @@
 				{% endif %}
 			</label>
 		</div>
-
-		<!-- 即決価格フィルタ -->
-		<div>
-			{% include "base/popover_v1.html" with title="即決価格フィルタ" description="検索条件登録直後に通知を行いたくない場合はOFFにして下さい。" only %}
-			<label>
-				{% if read_db.md_sokketu_sw == "nocheck" %}
-					{% include "base/tgsw_v1.html" with check="nocheck" name="sokketu_sw" only %}
-				{% else %}
-					{% include "base/tgsw_v1.html" with check="checked" name="sokketu_sw" only %}
-				{% endif %}
-			</label>
-		</div>
-
-		<!-- 自動延長フィルタ -->
-		<div>
-			{% include "base/popover_v1.html" with title="自動延長フィルタ" description="検索条件登録直後に通知を行いたくない場合はOFFにして下さい。" only %}
-			<label>
-				{% if read_db.md_autoex_sw == "nocheck" %}
-					{% include "base/tgsw_v1.html" with check="nocheck" name="autoex_sw" only %}
-				{% else %}
-					{% include "base/tgsw_v1.html" with check="checked" name="autoex_sw" only %}
-				{% endif %}
-			</label>
-		</div>
-
-		<!-- 検索元URL -->
+		<!-- OR タイトル -->
 		<p>
-			{% include "base/popover_v1.html" with title="検索元URL" description="URLは入力してください。<br>100件表示にしてください。" only %}
-			<textarea name="srch_url" class="textarea-width100" rows="2">{{ read_db.md_srch_url }}</textarea>
+			{% include "base/popover_v1.html" with title="タイトルのOR検索" description="キーワードはスペース区切りで入力してください。<br>何も入力しない場合は全てのタイトルが含まれます。<br>" only %}
+			<textarea name="or_title" class="textarea-width100" rows="2">{{ read_db.md_or_title }}</textarea>
 		</p>
-
-		<!-- 部分一致除外タイトル -->
+		<!-- 除外 タイトル -->
 		<p>
-			{% include "base/popover_v1.html" with title="部分一致除外タイトル" description="キーワードはスペース区切りで入力してください。<br>何も入力しない場合は全てのタイトルが含まれます。<br>" only %}
+			{% include "base/popover_v1.html" with title="タイトルのマイナス検索" description="キーワードはスペース区切りで入力してください。<br>何も入力しない場合は全てのタイトルが含まれます。<br>" only %}
 			<textarea name="ex_title" class="textarea-width100" rows="2">{{ read_db.md_ex_title }}</textarea>
 		</p>
-
-		<!-- 除外出品者 -->
+		<!-- OR 商品説明文 -->
 		<p>
-			{% include "base/popover_v1.html" with title="除外出品者" description="キーワードはスペース区切りで入力してください。<br>何も入力しない場合は全ての商品説明文が含まれます。<br>" only %}
-			<textarea name="ex_seller" class="textarea-width100" rows="2">{{ read_db.md_ex_seller }}</textarea>
+			{% include "base/popover_v1.html" with title="商品説明文のOR検索" description="キーワードはスペース区切りで入力してください。<br>何も入力しない場合は全ての商品説明文が含まれます。<br>" only %}
+			<textarea name="or_desc" class="textarea-width100" rows="2">{{ read_db.md_or_desc }}</textarea>
 		</p>
-
+		<!-- 除外 商品説明文 -->
+		<p>
+			{% include "base/popover_v1.html" with title="商品説明文のマイナス検索" description="キーワードはスペース区切りで入力してください。<br>何も入力しない場合は全ての商品説明文が含まれます。<br>" only %}
+			<textarea name="ex_desc" class="textarea-width100" rows="2">{{ read_db.md_ex_desc }}</textarea>
+		</p>
+		<!-- 価格フィルタ -->
+		<p>
+			{% include "base/popover_v1.html" with title="価格帯の絞り" description="何も入力しない場合は全ての価格帯が含まれます。<br>" only %}
+			<input type="number" name="price_min" value={{ read_db.md_price_min }} min="0" max="" step="1">
+			<span>～</span>
+			<input type="number" name="price_max" value={{ read_db.md_price_max }} min="0" max="" step="1">
+		</p>
 		<!-- DB連携 -->
 		<span class="d-flex align-items-center">
 				<span>検索条件保存・読込・削除</span>

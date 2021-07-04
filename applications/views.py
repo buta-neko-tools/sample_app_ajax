@@ -1,8 +1,6 @@
 from django.http import HttpResponseRedirect
 from django.shortcuts import render
 from .models import SearchQueryModel,UserDataModel
-from config.tasks import add,search_url,search_seller
-from celery.result import AsyncResult
 
 
 
@@ -17,23 +15,16 @@ def input_v1(request):
 		if request.method=='POST':
 			# ボタンを押したときnameでボタンを判定
 			if request.POST["db_action_btn"]=="save":
-				# チェックボックスの内容をリストにすると空でもエラー出ない
-				if len(request.POST.getlist('alert_sw_first')):
-					alert_sw_first_data='checked'
-				else:
-					alert_sw_first_data='nocheck'
 				# idを指定しないと最後に追加される
 				SearchQueryModel.objects.create(
-					md_query_name=request.POST['query_name'],
-					md_or_title=request.POST['or_title'],
-					md_ex_title=request.POST['ex_title'],
-					md_or_desc=request.POST['or_desc'],
-					md_ex_desc=request.POST['ex_desc'],
-					md_price_min=request.POST['price_min'],
-					md_price_max=request.POST['price_max'],
-					md_alert_sw=alert_sw_first_data,
+					md_query_name	=request.POST['query_name'],
+					md_srch_url		=request.POST['srch_url'],
+					md_ex_title		=request.POST['ex_title'],
+					md_ex_seller	=request.POST['ex_seller'],
+					md_sokketu_sw	=request.POST['sokketu_sw'],
+					md_autoex_sw	=request.POST['autoex_sw'],
+					md_alert_sw		=request.POST['alert_sw_first'],
 				)
-				# print(alert_sw_first_data)
 				# 登録後は最新のDBの内容を読み込んでDjangoテンプレートに渡す
 				read_db=SearchQueryModel.objects.order_by("id").last()
 			elif request.POST["db_action_btn"]=="read":
@@ -66,12 +57,14 @@ def userdata(request):
 		except:
 			db_line_token=''
 		if request.method=='POST':
-			UserDataModel.objects.update_or_create(md_name='user data',
-																						 defaults={'md_line_token':request.POST['line_token']})
+			UserDataModel.objects.update_or_create(
+				md_name='user data',
+				defaults={'md_line_token':request.POST['line_token']}
+			)
 			userdata=UserDataModel.objects.get(md_name='user data')
 			db_line_token=userdata.md_line_token
 		dt_data={'db_line_token':db_line_token}
-		return render(request, 'registration/userdata.html',dt_data)
+		return render(request, 'applications/userdata.html',dt_data)
 	else:
 		return HttpResponseRedirect('/accounts/login/')
 
@@ -79,14 +72,13 @@ def dballdata(request):
 	if request.user.is_authenticated:
 		db_all_data_dict=[]
 		for sqm_obj in SearchQueryModel.objects.all():
-			if sqm_obj.md_alert_sw=='checked':
-				db_all_data_dict.append({'検索条件名':sqm_obj.md_query_name,
-																 'ORタイトル':sqm_obj.md_or_title,
-																 '除外タイトル':sqm_obj.md_ex_title,
-																 'OR商品説明文':sqm_obj.md_or_desc,
-																 '除外商品説明文':sqm_obj.md_ex_desc,
-																 '最低価格':sqm_obj.md_price_min,
-																 '最高価格':sqm_obj.md_price_max})
+			db_all_data_dict.append({'検索条件名':sqm_obj.md_query_name,
+															 '検索元URL':sqm_obj.md_srch_url,
+															 '部分一致除外タイトル':sqm_obj.md_ex_title,
+															 '除外出品者':sqm_obj.md_ex_seller,
+															 '通知':sqm_obj.md_alert_sw,
+															 '即決価格':sqm_obj.md_sokketu_sw,
+															 '自動延長':sqm_obj.md_autoex_sw})
 		try:
 			user_data=UserDataModel.objects.get(md_name='user data')
 			line_token=user_data.md_line_token

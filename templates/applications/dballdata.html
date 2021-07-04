@@ -1,17 +1,12 @@
+{% extends "base/base.html" %}
+{% block content %}
 {% load static %}
-<html>
-	<head>
-		{% include 'base/head.html' %}
-	</head>
-	<body>
-		{% include 'base/headder_navbar.html' %}
-		<div class="between-headder-footer">
-			<p>
-				<span id="line_token">{{ line_token }}</span>
-			</p>
-			<p>
-				<span id="db_all_data_dict">{{ db_all_data_dict }}</span>
-			</p>
-		</div>
-	</body>
-</html>
+<body>
+	<p>
+		<span id="line_token">{{ line_token }}</span>
+	</p>
+	<p>
+		<span id="db_all_data_dict">{{ db_all_data_dict }}</span>
+	</p>
+</body>
+{% endblock %}
