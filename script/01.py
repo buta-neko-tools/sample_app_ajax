@@ -1,5 +1,4 @@
 import re
-
 import psycopg2
 import requests
 from bs4 import BeautifulSoup
@@ -16,13 +15,14 @@ class postgres:
 		self.dictcur.execute(sql)
 		return [dict(r) for r in self.dictcur.fetchall()]
 
-	def updata_old_url(self,oldurl,id):
-		pg_update="UPDATE applications_searchquerymodel SET md_old_url = %s WHERE id = %s"
-		self.cursor.execute(pg_update,(str(oldurl),id))
+	def updata_old_url(self,old_url,id):
+		sql_cmd="UPDATE applications_searchquerymodel SET md_old_url = %s WHERE id = %s"
+		self.cursor.execute(sql_cmd,(str(old_url),id))
 
-	def updata_newurl(self,newurl,id):
-		pg_update="UPDATE applications_searchquerymodel SET md_newurl = %s WHERE id = %s"
-		self.cursor.execute(pg_update,(str(newurl),id))
+	def alldel_old_url(self):
+		# sql_cmd="UPDATE applications_searchquerymodel SET md_old_url = %s"
+		sql_cmd="ALTER TABLE applications_searchquerymodel DROP COLUMN md_old_url"
+		self.cursor.execute(sql_cmd)
 
 class ydata:
 	def url_list(self,ori_url):
@@ -32,6 +32,17 @@ class ydata:
 		# print(len(url_list))
 		# print(url_list)
 		return [i.get("href") for i in bs4obj.select("h3 a")]
+
+	def tame01(self,sqm_dict):
+		for sqm in sqm_dict:
+			if sqm['md_old_url']==None:
+				old_url=yd.url_list(sqm['md_srch_url'])
+				pg.updata_old_url(old_url,id=sqm['id'])
+			else:
+				old_url=sqm['md_old_url']
+			new_url=yd.url_list(sqm['md_srch_url'])
+			update_url=list(set(new_url[:50])-set(old_url))
+			print(update_url)
 
 def tame():
 	host='ec2-34-202-54-225.compute-1.amazonaws.com'
@@ -71,13 +82,13 @@ user='bpldtuvfxuwtvc'
 password='da41ca9d74c46db9ec8f61cf8d32cf15c4f1c3adeb11cbda314545ad2fd68bc6'
 
 pg=postgres()
+yd=ydata()
+
 pg.connection(host=host,port=port,user=user,password=password,dbname=dbname)
 sqm_dict=pg.fetchall_dict('SELECT * FROM applications_searchquerymodel')
 
-yd=ydata()
-for sqm in sqm_dict:
-	if sqm['md_old_url']==None:
-		old_url=yd.url_list(sqm['md_srch_url'])
-		pg.updata_old_url(old_url,id=sqm['id'])
-	else:
-		old_url=sqm['md_old_url']
+pg.alldel_old_url()
+
+# yd.tame01(sqm_dict)
+
+
