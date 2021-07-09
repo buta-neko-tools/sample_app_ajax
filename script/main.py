@@ -180,8 +180,8 @@ class line_notify:
 # ------------------------------
 # DEBUG・初期 設定
 # ------------------------------
-# DEBUG=False
-DEBUG=True
+DEBUG=False
+# DEBUG=True
 
 if DEBUG:
 	import winsound
