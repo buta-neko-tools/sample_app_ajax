@@ -21,7 +21,7 @@ def input_v1(request):
 					md_srch_url		=request.POST['srch_url'],
 					md_ex_title		=request.POST['ex_title'],
 					md_ex_seller	=request.POST['ex_seller'],
-					md_sokketu_sw	=request.POST['sokketu_sw'],
+					md_buynow_sw	=request.POST['buynow_sw'],
 					md_autoex_sw	=request.POST['autoex_sw'],
 					md_alert_sw		=request.POST['alert_sw_first'],
 				)

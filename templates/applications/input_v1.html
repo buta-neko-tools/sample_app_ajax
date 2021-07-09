@@ -23,10 +23,10 @@
 		<div>
 			{% include "base/popover_v1.html" with title="即決設定除外フィルタ" description="検索条件登録直後に通知を行いたくない場合はOFFにして下さい。" only %}
 			<label>
-				{% if read_db.md_sokketu_sw == "nocheck" %}
-					{% include "base/tgsw_v1.html" with check="nocheck" name="sokketu_sw" only %}
+				{% if read_db.md_buynow_sw == "nocheck" %}
+					{% include "base/tgsw_v1.html" with check="nocheck" name="buynow_sw" only %}
 				{% else %}
-					{% include "base/tgsw_v1.html" with check="checked" name="sokketu_sw" only %}
+					{% include "base/tgsw_v1.html" with check="checked" name="buynow_sw" only %}
 				{% endif %}
 			</label>
 		</div>
