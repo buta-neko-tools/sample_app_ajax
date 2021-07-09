@@ -1,9 +1,12 @@
+import math
 import time
 from pprint import pprint
 import psycopg2
 import requests
 from bs4 import BeautifulSoup
 from psycopg2.extras import DictCursor
+
+
 
 class postgres:
 	def connection(self,host,user,password,dbname,port):
@@ -33,17 +36,18 @@ class postgres:
 
 class ydata:
 	def url_list(self,ori_url):
+		time.sleep(1)
 		bs4obj=BeautifulSoup(requests.get(ori_url).text,'html.parser')
 		# ストアとそれ以外で分岐しようとしたけど同じ方法で取得できた
 		# self.url_list=[i.get("href") for i in bs4obj.select("h3 a")]
 		# print(len(url_list))
 		# print(url_list)
-		time.sleep(0.5)
 		return [i.get("href") for i in bs4obj.select("h3 a")]
 
 	def auc_detail(self,update_url_list):
 		auc_data_dict=[]
 		for update_url in update_url_list:
+			time.sleep(1)
 			bs4obj=BeautifulSoup(requests.get(update_url).text,'html.parser')
 			# オークション名
 			auc_title=bs4obj.select_one("h1.ProductTitle__text").text
@@ -67,12 +71,16 @@ class ydata:
 														'自動延長':auc_autoex,
 														'即決設定':auc_buynow,
 														})
-			time.sleep(0.5)
 		# pprint(auc_data_dict)
 		return auc_data_dict
 
 	def filter_judge(self,sqm,auc_data_dict):
 		alert_content_dict=[]
+		print(f'sqm\n'
+					f'タイトルの部分一致除外：{sqm["md_ex_title"]}\n'
+					f'除外出品者：{sqm["md_ex_seller"]}\n'
+					f'即決設定除外フィルタ：{sqm["md_buynow_sw"]}\n'
+					f'自動延長除外フィルタ：{sqm["md_autoex_sw"]}\n')
 		for auc_data in auc_data_dict:
 			filter_judge={}
 			# ------------------------------
@@ -133,16 +141,9 @@ class ydata:
 				# dict を append するとなぜか 検索条件名 が上書きされるので以下の記事を参考にした
 				# https://gist.github.com/dogrunjp/9748789
 				alert_content_dict.append(auc_data.copy())
-			print(f'sqm\n'
-						f'タイトルの部分一致除外：{sqm["md_ex_title"]}\n'
-						f'除外出品者：{sqm["md_ex_seller"]}\n'
-						f'即決設定除外フィルタ：{sqm["md_buynow_sw"]}\n'
-						f'自動延長除外フィルタ：{sqm["md_autoex_sw"]}\n')
-			print(f'auc_data')
-			pprint(auc_data)
-			print(f'filter_judge')
-			pprint(filter_judge)
-		print(f'alert_content_dict\n{alert_content_dict}\n\n')
+			print(f'auc_data\n{auc_data}\n')
+			print(f'filter_judge\n{filter_judge}\n')
+		print(f'alert_content_dict\n{alert_content_dict}\n')
 		return alert_content_dict
 
 class line_notify:
@@ -150,7 +151,7 @@ class line_notify:
 		pipe='------------------------------'
 		line_token=pg.fetch_udm_dict('md_line_token')
 		if alert_content_dict and line_token:
-			print(f'alert_content_dict と line_token が有るので通知する')
+			print(f'alert_content_dict と line_token が有るので通知する\n')
 			self.api_post(line_token,pipe,'')
 			for alert_content in alert_content_dict:
 				messege=f"\n検索条件名：{alert_content['検索条件名']}\n"\
@@ -162,9 +163,9 @@ class line_notify:
 			self.api_post(line_token,pipe,'')
 		else:
 			if alert_content_dict:
-				print(f'line_token が空だったので通知しなかった')
+				print(f'line_token が空だったので通知しなかった\n')
 			if line_token:
-				print(f'alert_content_dict が空だったので通知しなかった')
+				print(f'alert_content_dict が空だったので通知しなかった\n')
 
 	def api_post(self,token,message,image):
 		line_notify_api = 'https://notify-api.line.me/api/notify'
@@ -199,35 +200,33 @@ ln=line_notify()
 pg.connection(host=host,port=port,user=user,password=password,dbname=dbname)
 
 def main():
-	while_count=0
 	pg.init_old_url()
 	while True:
-		while_count+=1
 		sqm_dict=pg.fetchall_sqm_dict()
 		for sqm in sqm_dict:
 			if sqm['md_old_url']==None:
-				print(f'{sqm["md_query_name"]} の md_old_url が空なので新規に取得\n')
+				print(f'{sqm["md_query_name"]} の md_old_url が空なので新規に取得')
 				old_url_list=yd.url_list(sqm['md_srch_url'])
 				pg.updata_old_url(old_url_list,id=sqm['id'])
 			else:
-				print(f'{sqm["md_query_name"]} の md_old_url が有るのでDBから取得\n')
+				print(f'{sqm["md_query_name"]} の md_old_url が有るのでDBから取得')
 				old_url_list=eval(sqm['md_old_url'])
 			new_url_list=yd.url_list(sqm['md_srch_url'])
-			update_url_list=list(set(new_url_list[:50])-set(old_url_list))
+			# 100件以下の場合は50では計算できないので、動的に半分で小数点以下切り捨てを算出
+			update_url_list=list(set(new_url_list[:math.floor(len(new_url_list)/2)])-set(old_url_list))
 			if update_url_list:
-				if DEBUG:
-					winsound.Beep(1500,500)
-					winsound.Beep(1500,500)
 				print(f'{sqm["md_query_name"]} で更新されたURLの数：{len(update_url_list)}\n')
-				while_count=0
 				pg.updata_old_url(new_url_list,id=sqm['id'])
 				if sqm['md_alert_sw']=="checked":
-					print(f'{sqm["md_query_name"]} の md_alert_sw が checked なので、オク詳細を取得して、フィルタ判定\n')
+					if DEBUG:
+						winsound.Beep(1500,500)
+						winsound.Beep(1500,500)
+					print(f'{sqm["md_query_name"]} の md_alert_sw が checked なので、オク詳細を取得してフィルタ判定\n')
 					auc_data_dict=yd.auc_detail(update_url_list)
 					alert_content_dict=yd.filter_judge(sqm=sqm,auc_data_dict=auc_data_dict)
 					ln.send(alert_content_dict)
 				else:
 					print(f'{sqm["md_query_name"]} の md_alert_sw が nocheck なので pass\n')
 			else:
-				print(f'{while_count} {sqm["md_query_name"]} の更新前の最新のURL\n{old_url_list[0]}\n')
+				print(f'{sqm["md_query_name"]} の更新前の最新のURL\n{old_url_list[0]}\n')
 main()
