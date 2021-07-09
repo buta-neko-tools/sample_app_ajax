@@ -7,9 +7,9 @@ class SearchQueryModel(models.Model):
 	md_ex_title		=models.TextField(null=True)
 	md_ex_seller	=models.TextField(null=True)
 	md_alert_sw		=models.CharField(max_length=50,null=True)
-	md_sokketu_sw	=models.CharField(max_length=50,null=True)
+	md_buynow_sw	=models.CharField(max_length=50,null=True)
 	md_autoex_sw	=models.CharField(max_length=50,null=True)
-	md_old_url			=models.TextField(null=True)
+	md_old_url		=models.TextField(null=True)
 	def __str__(self):
 		return 'id:'+str(self.id)+' name:'+str(self.md_query_name)
 

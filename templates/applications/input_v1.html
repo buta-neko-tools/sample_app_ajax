@@ -21,7 +21,7 @@
 
 		<!-- 即決価格フィルタ -->
 		<div>
-			{% include "base/popover_v1.html" with title="即決価格フィルタ" description="検索条件登録直後に通知を行いたくない場合はOFFにして下さい。" only %}
+			{% include "base/popover_v1.html" with title="即決設定除外フィルタ" description="検索条件登録直後に通知を行いたくない場合はOFFにして下さい。" only %}
 			<label>
 				{% if read_db.md_sokketu_sw == "nocheck" %}
 					{% include "base/tgsw_v1.html" with check="nocheck" name="sokketu_sw" only %}
@@ -33,7 +33,7 @@
 
 		<!-- 自動延長フィルタ -->
 		<div>
-			{% include "base/popover_v1.html" with title="自動延長フィルタ" description="検索条件登録直後に通知を行いたくない場合はOFFにして下さい。" only %}
+			{% include "base/popover_v1.html" with title="自動延長除外フィルタ" description="検索条件登録直後に通知を行いたくない場合はOFFにして下さい。" only %}
 			<label>
 				{% if read_db.md_autoex_sw == "nocheck" %}
 					{% include "base/tgsw_v1.html" with check="nocheck" name="autoex_sw" only %}
@@ -51,7 +51,7 @@
 
 		<!-- 部分一致除外タイトル -->
 		<p>
-			{% include "base/popover_v1.html" with title="部分一致除外タイトル" description="キーワードはスペース区切りで入力してください。<br>何も入力しない場合は全てのタイトルが含まれます。<br>" only %}
+			{% include "base/popover_v1.html" with title="タイトルの部分一致除外" description="キーワードはスペース区切りで入力してください。<br>何も入力しない場合は全てのタイトルが含まれます。<br>" only %}
 			<textarea name="ex_title" class="textarea-width100" rows="2">{{ read_db.md_ex_title }}</textarea>
 		</p>
 
