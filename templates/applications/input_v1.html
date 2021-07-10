@@ -21,7 +21,7 @@
 
 		<!-- 即決設定除外 -->
 		<div>
-			{% include "base/popover_v1.html" with title="即決設定除外" description="OFFの場合は全ての即決設定が含まれます。" only %}
+			{% include "base/popover_v1.html" with title="即決設定通知" description="ONの場合は即決価格が設定されたオークションが通知されます。" only %}
 			<label>
 				{% if read_db.md_buynow_sw == "nocheck" %}
 					{% include "base/tgsw_v1.html" with check="nocheck" name="buynow_sw" only %}
@@ -33,7 +33,7 @@
 
 		<!-- 自動延長設定除外 -->
 		<div>
-			{% include "base/popover_v1.html" with title="自動延長設定除外" description="OFFの場合は全ての自動延長設定が含まれます。" only %}
+			{% include "base/popover_v1.html" with title="自動延長設定除外" description="ONの場合は自動延長が設定されたオークションは通知されません。" only %}
 			<label>
 				{% if read_db.md_autoex_sw == "nocheck" %}
 					{% include "base/tgsw_v1.html" with check="nocheck" name="autoex_sw" only %}

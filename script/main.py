@@ -118,7 +118,7 @@ class ydata:
 			if sqm['md_buynow_sw']=="nocheck":
 				filter_judge['即決設定除外フィルタ']='OK'
 			else:
-				if auc_data['即決設定']=="なし":
+				if auc_data['即決設定']=="あり":
 					filter_judge['即決設定除外フィルタ']='OK'
 				else:
 					filter_judge['即決設定除外フィルタ']='NG'
