@@ -202,30 +202,34 @@ def main():
 	pg.init_old_url()
 	while True:
 		sqm_dict=pg.fetchall_sqm_dict()
-		for sqm in sqm_dict:
-			if sqm['md_old_url']==None:
-				print(f'{sqm["md_query_name"]} の md_old_url が空なので新規に取得')
-				old_url_list=yd.url_list(sqm['md_srch_url'])
-				pg.updata_old_url(old_url_list,id=sqm['id'])
-			else:
-				print(f'{sqm["md_query_name"]} の md_old_url が有るのでDBから取得')
-				old_url_list=eval(sqm['md_old_url'])
-			new_url_list=yd.url_list(sqm['md_srch_url'])
-			# 100件以下の場合は50では計算できないので、動的に半分で小数点以下切り捨てを算出
-			update_url_list=list(set(new_url_list[:math.floor(len(new_url_list)/2)])-set(old_url_list))
-			if update_url_list:
-				print(f'{sqm["md_query_name"]} で更新されたURLの数：{len(update_url_list)}\n')
-				pg.updata_old_url(new_url_list,id=sqm['id'])
-				if sqm['md_alert_sw']=="checked":
-					if DEBUG:
-						winsound.Beep(1500,500)
-						winsound.Beep(1500,500)
-					print(f'{sqm["md_query_name"]} の md_alert_sw が checked なので、オク詳細を取得してフィルタ判定\n')
-					auc_data_dict=yd.auc_detail(update_url_list)
-					alert_content_dict=yd.filter_judge(sqm=sqm,auc_data_dict=auc_data_dict)
-					ln.send(alert_content_dict)
+		if not sqm_dict:
+			print('sqm_dict が空なので10秒スリープ')
+			time.sleep(10)
+		else:
+			for sqm in sqm_dict:
+				if sqm['md_old_url']==None:
+					print(f'{sqm["md_query_name"]} の md_old_url が空なので新規に取得')
+					old_url_list=yd.url_list(sqm['md_srch_url'])
+					pg.updata_old_url(old_url_list,id=sqm['id'])
 				else:
-					print(f'{sqm["md_query_name"]} の md_alert_sw が nocheck なので pass\n')
-			else:
-				print(f'{sqm["md_query_name"]} の更新前の最新のURL\n{old_url_list[0]}\n')
+					print(f'{sqm["md_query_name"]} の md_old_url が有るのでDBから取得')
+					old_url_list=eval(sqm['md_old_url'])
+				new_url_list=yd.url_list(sqm['md_srch_url'])
+				# 100件以下の場合は50では計算できないので、動的に半分で小数点以下切り捨てを算出
+				update_url_list=list(set(new_url_list[:math.floor(len(new_url_list)/2)])-set(old_url_list))
+				if update_url_list:
+					print(f'{sqm["md_query_name"]} で更新されたURLの数：{len(update_url_list)}\n')
+					pg.updata_old_url(new_url_list,id=sqm['id'])
+					if sqm['md_alert_sw']=="checked":
+						if DEBUG:
+							winsound.Beep(1500,500)
+							winsound.Beep(1500,500)
+						print(f'{sqm["md_query_name"]} の md_alert_sw が checked なので、オク詳細を取得してフィルタ判定\n')
+						auc_data_dict=yd.auc_detail(update_url_list)
+						alert_content_dict=yd.filter_judge(sqm=sqm,auc_data_dict=auc_data_dict)
+						ln.send(alert_content_dict)
+					else:
+						print(f'{sqm["md_query_name"]} の md_alert_sw が nocheck なので pass\n')
+				else:
+					print(f'{sqm["md_query_name"]} の更新前の最新のURL\n{old_url_list[0]}\n')
 main()
