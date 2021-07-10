@@ -147,6 +147,23 @@ class ydata:
 
 class line_notify:
 	def send(self,alert_content_dict):
+		line_token=pg.fetch_udm_dict('md_line_token')
+		if alert_content_dict and line_token:
+			print(f'alert_content_dict と line_token が有るので通知する\n')
+			for alert_content in alert_content_dict:
+				messege=f"\n検索条件名：{alert_content['検索条件名']}\n"\
+					f"タイトル：{alert_content['タイトル']}\n"\
+					f"商品URL：{alert_content['商品URL']}"
+					# f"価格：{alert_content['価格']}\n"\
+					# f"商品説明文：{alert_content['商品説明文']}\n"
+				self.api_post(line_token,messege,alert_content['画像URL'])
+		else:
+			if alert_content_dict:
+				print(f'line_token が空だったので通知しなかった\n')
+			if line_token:
+				print(f'alert_content_dict が空だったので通知しなかった\n')
+
+	def send_pipe(self,alert_content_dict):
 		pipe='------------------------------'
 		line_token=pg.fetch_udm_dict('md_line_token')
 		if alert_content_dict and line_token:
