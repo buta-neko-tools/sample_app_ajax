@@ -1,5 +1,4 @@
 from django.contrib import admin
-from .models import SearchQueryModel,UserDataModel
+from .models import AjaxSliderModel
 
-admin.site.register(SearchQueryModel)
-admin.site.register(UserDataModel)
+admin.site.register(AjaxSliderModel)

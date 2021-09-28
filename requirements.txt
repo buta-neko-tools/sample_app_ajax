@@ -47,3 +47,8 @@ wcwidth==0.2.5
 websockets==8.1
 whitenoise==5.2.0
 zipp==3.4.1
+
+numpy
+opencv-contrib-python
+opencv-python
+pillow
