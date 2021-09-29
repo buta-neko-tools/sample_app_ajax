@@ -9,6 +9,7 @@ urlpatterns = [
 	# path('dballdata/',views.dballdata,name='dballdata'),
 	# path('test01/',views.test01,name='test01'),
 
-	path('',views.index,name='index'),
+	path('index/',views.index,name='index'),
 	path('ajax-number/',views.ajax_number,name='ajax_number'),
+	path('dballdata/',views.dballdata,name='dballdata'),
 ]
