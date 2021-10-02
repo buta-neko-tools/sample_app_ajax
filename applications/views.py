@@ -2,6 +2,7 @@ from django.shortcuts import render
 from django.conf import settings
 from django.http import JsonResponse
 from .models import AjaxSliderModel
+import json
 
 def index(request):
 	return render(request, 'applications/index.html', {})
@@ -21,6 +22,7 @@ def dballdata(request):
 		dballdata=AjaxSliderModel.objects.get(md_name='AjaxSliderNum')
 		db_num=dballdata.md_num
 	except:
-		db_num='0'
+		db_num='50'
 	dt_data={'db_num':db_num}
-	return render(request, 'applications/dballdata.html',dt_data)
+	conv_json=json.dumps(dt_data)
+	return render(request,'applications/dballdata.html',{'conv_json':conv_json})
