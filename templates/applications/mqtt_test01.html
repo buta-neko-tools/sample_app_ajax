@@ -1,0 +1,23 @@
+{% load static %}
+<html lang="ja">
+	<head>
+		<title>Ajax</title>
+	</head>
+	<body>
+		<div class="container">
+			<h2>数値の入力</h2>
+			<form id="form_ajax" action="{% url 'app_urls:mqtt_ajax' %}" method="POST">
+				{% csrf_token %}
+				<input type="range" id="slider_ajax" min="0" max="100" value="50" step="10">
+			</form>
+			<div class="result">
+				<p></p>
+			</div>
+		</div>
+
+		<!-- jQuery -->
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+		<!-- 外部jsファイル ajax -->
+		<script type="text/javascript" src="{% static 'js/mqtt_test01.js' %}"></script>
+	</body>
+</html>
