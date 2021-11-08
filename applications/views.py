@@ -3,9 +3,9 @@ from django.conf import settings
 from django.http import JsonResponse
 from .models import AjaxSliderModel
 import json
-import paho.mqtt.client as mqtt
+#import paho.mqtt.client as mqtt
 from time import sleep
-import paho.mqtt.publish as publish
+#import paho.mqtt.publish as publish
 
 def index(request):
 	return render(request, 'applications/index.html', {})
@@ -63,11 +63,6 @@ def mqtt_ajax(request):
 	print(d)
 	client_obj.publish("drone/001","Hello, Drone!")
 	return JsonResponse(d)
-"""
-
-def mqtt_test01(request):
-	return render(request, 'applications/mqtt_test01.html', {})
-
 def mqtt_ajax(request):
 	slider_num = request.POST.get('slider_num')
 	d = {'slider_num': slider_num,
@@ -81,6 +76,11 @@ def mqtt_ajax(request):
 								 auth={'username':'dopudopu','password':'CrtTex6On76V8M1v'},
 								 )
 	return JsonResponse(d)
+
+"""
+
+def mqtt_test01(request):
+	return render(request, 'applications/mqtt_test01.html', {})
 
 def mqtt_test02(request):
 	return render(request, 'applications/mqtt_test02.html', {})
