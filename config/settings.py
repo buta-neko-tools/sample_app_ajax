@@ -7,6 +7,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # DEBUG=False
 DEBUG=True
 ALLOWED_HOSTS=['*']
+
 SECRET_KEY=os.environ.get('SECRET_KEY')
 
 INSTALLED_APPS = [
@@ -17,14 +18,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'applications.apps.ApplicationsConfig',
-    'django_celery_results',
 ]
-
-# Celery設定 REDIS_URL が見つからないローカル環境では第二引数を適用
-CELERY_BROKER_URL=os.environ.get('REDIS_URL','redis://localhost')
-CELERY_RESULT_BACKEND=os.environ.get('REDIS_URL','redis://localhost')
-# これにするとDjangoと同じポスグレに結果が保存される
-# CELERY_RESULT_BACKEND = "django-db"
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
@@ -34,7 +28,6 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
-    'whitenoise.middleware.WhiteNoiseMiddleware' #一番下に追加しないとエラー？
 ]
 
 ROOT_URLCONF = 'config.urls'
@@ -56,13 +49,6 @@ TEMPLATES = [
 ]
 
 WSGI_APPLICATION = 'config.wsgi.application'
-
-# dj_database_url.config()では、環境変数の一つであるDATABASE_URLを元に接続情報のディクショナリーが入ります。HerokuではディフォルトでDATABASE_URLにPostgresのパスが設定されているため、これ以上の設定は必要ありません。
-# https://qiita.com/terappy/items/803ff638d63b3dc09ada
-import dj_database_url
-DATABASES = {
-    'default': dj_database_url.config(),
-}
 
 AUTH_PASSWORD_VALIDATORS = [
     {
@@ -89,18 +75,6 @@ USE_L10N = True
 
 USE_TZ = True
 
-# https://qiita.com/shonansurvivors/items/ff2dc23ed0962c2a6f12
-# ここの方法→HTML、adminページのcss表示OK
-# STATIC_URL = '/static/'
-# STATICFILES_DIRS = [os.path.join(BASE_DIR, 'static')]
-# STATIC_ROOT = 'staticfiles'
-
-# akiyokoさんの方法→HTML、adminページのcss表示OK
-# STATIC_URL = '/static/'
-# STATICFILES_DIRS = [os.path.join(BASE_DIR, 'static')]
-# PROJECT_NAME = os.path.basename(BASE_DIR)
-# STATIC_ROOT = 'var/www/{}/static'.format(PROJECT_NAME)
-
 # https://devcenter.heroku.com/ja/articles/django-assets
 # Herokuの方法→HTML、adminページのcss表示OK
 STATIC_URL = '/static/'
@@ -114,10 +88,3 @@ try:
     from .local_settings import *
 except ImportError:
     pass
-
-##################
-# Authentication #
-##################
-LOGIN_URL = '/login/'
-LOGIN_REDIRECT_URL = '/v1/'
-LOGOUT_REDIRECT_URL = '/accounts/login/'
