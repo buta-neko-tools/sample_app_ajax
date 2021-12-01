@@ -14,4 +14,7 @@ urlpatterns = [
 	# path('mqtt_test01/',views.mqtt_test01,name='mqtt_test01'),
 	# path('mqtt_ajax/',views.mqtt_ajax,name='mqtt_ajax'),
 	path('mqtt_test02/',views.mqtt_test02,name='mqtt_test02'),
+	# ajaxの解説用
+	path('ajax_index/',views.ajax_index,name='ajax_index'),
+	path('ajax_proc/',views.ajax_proc,name='ajax_proc'),
 ]

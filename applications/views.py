@@ -14,10 +14,8 @@ def ajax_number(request):
 	num = request.POST.get('num')
 	print(num)
 	AjaxSliderModel.objects.update_or_create(md_name='AjaxSliderNum',
-																					 defaults={'md_num':num},
-																					 )
-	d = {'num': num,
-			 }
+																					 defaults={'md_num':num})
+	d = {'num': num}
 	return JsonResponse(d)
 
 def dballdata(request):
@@ -84,3 +82,13 @@ def mqtt_test01(request):
 
 def mqtt_test02(request):
 	return render(request, 'applications/mqtt_test02.html', {})
+
+# ajaxの解説用
+def ajax_index(request):
+	return render(request, 'applications/ajax_index.html', {})
+# ajaxの解説用
+def ajax_proc(request):
+	slider_num = request.POST.get('slider_num')
+	print(slider_num)
+	json_data = {'slider_num': slider_num}
+	return JsonResponse(json_data)
